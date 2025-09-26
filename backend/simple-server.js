@@ -92,6 +92,39 @@ app.get('/api/auth/me', (req, res) => {
   });
 });
 
+// Emergency alert endpoint
+app.post('/api/emergency-alert', (req, res) => {
+  const { driverId, location, severity, timestamp } = req.body;
+  
+  console.log('🚨 EMERGENCY ALERT RECEIVED:', {
+    driverId,
+    location,
+    severity,
+    timestamp
+  });
+  
+  // Broadcast to all connected clients
+  io.emit('emergency_alert', {
+    accidentId: 'ACC-EMERGENCY-' + Date.now(),
+    driverId,
+    location,
+    severity,
+    timestamp,
+    status: 'EMERGENCY - Ambulance Dispatched'
+  });
+  
+  res.json({
+    success: true,
+    message: 'Emergency alert sent to all hospitals',
+    data: {
+      alertId: 'ALERT-' + Date.now(),
+      hospitalCount: 12,
+      ambulanceDispatched: true,
+      estimatedArrival: '4 minutes'
+    }
+  });
+});
+
 // Accidents endpoints
 app.get('/api/accidents', (req, res) => {
   res.json({
