@@ -4,11 +4,10 @@
   "description": "SafeRide AI Backend API with Real-time Communication",
   "main": "integrated-server.js",
   "scripts": {
-    "start": "node ai-backend-server.js",
-    "dev": "nodemon ai-backend-server.js",
+    "start": "node integrated-server.js",
+    "dev": "nodemon integrated-server.js",
     "simple": "node simple-server.js",
-    "integrated": "node integrated-server.js",
-    "ai": "node ai-backend-server.js"
+    "integrated": "node integrated-server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -18,10 +17,7 @@
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
     "uuid": "^9.0.0",
-    "moment": "^2.29.4",
-    "mongoose": "^7.5.0",
-    "axios": "^1.5.0",
-    "twilio": "^4.15.0"
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

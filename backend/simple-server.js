@@ -1,19 +1,22 @@
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 const cors = require('cors');
-const { createServer } = require('http');
-const { Server } = require('socket.io');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const app = express();
-const server = createServer(app);
-
-// Socket.IO setup
-const io = new Server(server, {
+const server = http.createServer(app);
+const io = socketIo(server, {
   cors: {
     origin: ["http://localhost:3000", "http://localhost:3002"],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   }
 });
+
+const PORT = process.env.PORT || 3001;
+const JWT_SECRET = 'saferide_ai_secret_key_2024';
 
 // Middleware
 app.use(cors({
@@ -22,8 +25,33 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Health check endpoint
-app.get('/health', (req, res) => {
+// In-memory database (for demo purposes)
+let users = [
+  {
+    id: 1,
+    email: 'hospital@saferide.ai',
+    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password123
+    firstName: 'Hospital',
+    lastName: 'Staff',
+    userType: 'hospital',
+    hospitalId: 'HOSP001'
+  },
+  {
+    id: 2,
+    email: 'driver@saferide.ai',
+    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password123
+    firstName: 'John',
+    lastName: 'Driver',
+    userType: 'driver',
+    driverId: 'DRV001'
+  },
+  {
+    id: 3,
+    email: 'admin@saferide.ai',
+    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password123
+    firstName: 'Admin',
+    lastName: 'User',
+    userType: 'admin'
   res.json({
     status: 'OK',
     timestamp: new Date().toISOString(),
